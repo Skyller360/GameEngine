@@ -53,7 +53,8 @@ function Loader()
 			Scenes["ScenePathFinding"]  = new ScenePathFinding();
 			Scenes["SceneSave"]  = new SceneSave();
 			Scenes["SceneIA"]  = new SceneIA();		
-			Scenes["AudioScene"]  = new AudioScene();			
+			Scenes["AudioScene"]  = new AudioScene();	
+			Scenes["Sentee"]  = new Sentee();			
 
 			LoadImages();
 			this.started = true;

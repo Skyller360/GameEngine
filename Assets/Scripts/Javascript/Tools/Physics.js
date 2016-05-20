@@ -334,6 +334,7 @@ function Box(_x, _y, _width, _height)
     if(typeof this.w != 'number') PrintErr("Parameter width in Box");
     if(typeof this.h != 'number') PrintErr("Parameter height in Box");
 }
+
 /**
  * 
  * @constructs Circle
