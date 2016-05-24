@@ -34,6 +34,7 @@ function Rectangle()
 	this.started = false;
 	this.rendered = true;
 	this.fixedToCamera = true;
+	this.life = 5;
 
 	this.MouseOffset = new Vector();
 
@@ -45,7 +46,7 @@ function Rectangle()
 	this.Transform.Size = new Vector();
 	this.Transform.RelativeScale = new Vector(1,1);
 	this.Transform.Scale = new Vector(1,1);
-	this.Transform.Pivot = new Vector(0.505, 0.67);
+	this.Transform.Pivot = new Vector(0.5, 0.5);
 	this.Transform.angle = 0;
 
 	/**
@@ -330,15 +331,6 @@ function Rectangle()
 	this.Start = function() 
 	{
 		if (!this.started) {
-			
-			var url = '10.10.7.50:3000';
-			var socket = io.connect('10.10.7.50:3000');
-
-			socket.on('alphaData', function(data)
-			{
-				Input.alpha = -data;
-			});
-
 			// operation start
 
 			if (this.Physics.colliderIsSameSizeAsTransform) 
@@ -418,8 +410,12 @@ function Rectangle()
             this.Transform.angle += 5;
         }		
 		
-		this.Transform.angle = Input.alpha;
-		var box = new Box(this.Transform.RelativePosition.x + 20, this.Transform.RelativePosition.y + 60, 60, 80);
+		for (var index = 0; index < this.life; index++) {
+			ctx.drawImage(Images['Heart'], (index * 34) + 50, canvas.height - 70, 34, 34);	
+		}
+	
+		// this.Transform.angle = Input.alpha;
+		var box = new Box(this.Transform.RelativePosition.x, this.Transform.RelativePosition.y, 40, 40);
 		this.Physics.Collider = box;
 		
         this.Renderer.Draw();

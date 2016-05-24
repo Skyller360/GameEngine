@@ -54,7 +54,8 @@ function Loader()
 			Scenes["SceneSave"]  = new SceneSave();
 			Scenes["SceneIA"]  = new SceneIA();		
 			Scenes["AudioScene"]  = new AudioScene();	
-			Scenes["Sentee"]  = new Sentee();			
+			Scenes["Sentee"]  = new Sentee();		
+			Scenes["GameOver"]  = new GameOver();			
 
 			LoadImages();
 			this.started = true;

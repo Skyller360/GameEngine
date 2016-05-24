@@ -45,10 +45,10 @@ function Enemies(_hero)
 	this.Transform = {};
 	this.Transform.RelativePosition = new Vector(this.randCircle.x, this.randCircle.y);
 	this.Transform.Position = new Vector();
-	this.Transform.Size = new Vector(101, 171);
+	this.Transform.Size = new Vector(46, 32);
 	this.Transform.RelativeScale = new Vector(1,1);
 	this.Transform.Scale = new Vector(1,1);
-	this.Transform.Pivot = new Vector(0.505, 0.67);
+	this.Transform.Pivot = new Vector(0.5, 0.5);
     this.Transform.angle = Math.RadianToDegree(Math.atan2(this.hero.Transform.RelativePosition.y - this.Transform.RelativePosition.y, this.hero.Transform.RelativePosition.x - this.Transform.RelativePosition.x));
     
 	/**
@@ -409,15 +409,12 @@ function Enemies(_hero)
 		var AngleX = Math.cos(Math.DegreeToRadian(this.Transform.angle));
 		var AngleY = Math.sin(Math.DegreeToRadian(this.Transform.angle));
 		
-		this.Transform.RelativePosition.x += AngleX / 4;
-		this.Transform.RelativePosition.y += AngleY / 4;
+		this.Transform.RelativePosition.x += AngleX;
+		this.Transform.RelativePosition.y += AngleY;
 		
-		var box = new Box(this.Transform.RelativePosition.x, this.Transform.RelativePosition.y + 90, 100, 50);
+		var box = new Box(this.Transform.RelativePosition.x, this.Transform.RelativePosition.y, 46, 32);
 		
-		this.Physics.Collider = box;
-
-
-		
+		this.Physics.Collider = box;		
         this.Renderer.Draw();
 		this.PostUpdate();	
 	};

@@ -18,6 +18,9 @@ var Input =
 	mouseDraging: false,
 	MouseDraggedElement: null,
 	alpha : 0,
+	mobile : false,
+	
+	// mobile : false,
 	
 	/**
 	 * 

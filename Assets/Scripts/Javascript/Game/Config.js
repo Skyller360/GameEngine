@@ -21,15 +21,14 @@ Gravity.y = -9.81;
 
 // PATH FICHIER AUDIO
 
-
-
-
 var Application = 
 {
 	LoadedScene: null,
-	gamePaused: false,
+	GamePaused: false,
 	debugMode: true
 };
+
+
 
 var imagesLoaded = 0;
 var WalkableTiles = [];
@@ -40,6 +39,10 @@ var ImagesPath =
 	{ name:"Boy",path: "Examples/PlanetCute/CharacterBoy.png"},
 	{ name:"Princess",path: "Examples/PlanetCute/CharacterPrincessGirl.png"},
 	{ name:"Enemy Bug",path: "Examples/PlanetCute/EnemyBug.png"},
+	{ name:"Heart",path: "Examples/PlanetCute/heart.png"},
+	{ name:"Ground",path: "Examples/PlanetCute/BlockGreen.png"},
+	{ name:"BlockGreen",path: "Examples/PlanetCute/blockGreen.png"},
+	{ name:"Bobby",path: "Examples/PlanetCute/Bobby.png"},
 ];
 var Images = {};
 
@@ -47,11 +50,8 @@ var audioLoaded = 0;
 
 var AudioPath = 
 [
-	{ name:'Acoustic', path: 'TechnoGame_Acoustic.mp3'},
-	{ name:'Bass', path: 'TechnoGame_Bass.mp3'},
-	{ name:'Chorus', path: 'TechnoGame_Chorus.mp3'},
-	{ name:'HighNotes', path: 'TechnoGame_HighNotes.mp3'},
-	{ name:'Bend', path: 'TechnoGame_Bend.mp3'}
+	{ name:'BackgroundSound', path: 'All_of_Us.mp3'},
+	{ name:'Hit', path: 'highDown.mp3'},
 	
 ];
 var Audios = {};

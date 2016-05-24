@@ -66,7 +66,8 @@ function game(req, res)
 		".jpg": "image/jpeg",
 		".gif": "image/gif",
 		".png": "image/png",
-		".ico": "icon"
+		".ico": "icon",
+		".mp3": "audio/mpeg"
 	};
 	
 	var isValidExt = validExtensions[ext];
@@ -79,7 +80,7 @@ function game(req, res)
 		fs.exists(localPath, function(exists) {
 			if(exists) 
 			{
-				console.log("Serving file: " + localPath);
+				// console.log("Serving file: " + localPath);
 				getFile(localPath, res, isValidExt);			
 			} 
 			else 
@@ -99,11 +100,11 @@ function game(req, res)
 }
 
 io.on('connection', function (socket) {
-	nbConnected++;
-	console.log(nbConnected);
+	// nbConnected++;
 	socket.on('mobile', function(data)
 	{
-		socket.broadcast.emit('alphaData', data);
-	})
+		console.log(nbConnected);
+		socket.broadcast.emit('mobileData', data);
+	});
 });
 
