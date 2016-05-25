@@ -135,7 +135,7 @@ function GridLevel()
 			}
 			for (var index = 0; index < Application.nbPlayers; index++) {
 				var element = this.gridGroup.GameObjects[index];
-				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * sizeY + sizeY / 2, Time.deltaTime * 200, 0.05 );
+				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * sizeY + sizeY / 2, Time.deltaTime * 500, 2 );
 				//posY = (element.rank - 1)* sizeY + sizeY / 2;
 				ctx.font = '20px Verdana';
 				ctx.fillStyle = 'black';
