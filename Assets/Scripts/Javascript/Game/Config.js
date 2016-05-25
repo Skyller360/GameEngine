@@ -51,7 +51,7 @@ var ImagesPath =
 	{ name:"Grass Block",path: "Examples/PlanetCute/Grass Block.png"},
 	{ name:"Key",path: "Examples/PlanetCute/Key.png"},
 	{ name:"Plain Block",path: "Examples/PlanetCute/Plain Block.png"},
-	{ name:"Rock",path: "Examples/PlanetCute/Rock.png"},
+	{ name:"Block",path: "block.png"},
 	{ name:"Stone Block",path: "Examples/PlanetCute/Stone Block.png"},
 	{ name:"Stone Block Tall",path: "Examples/PlanetCute/Stone Block Tall.png"},
 	{ name:"Tree Short",path: "Examples/PlanetCute/Tree Short.png"},

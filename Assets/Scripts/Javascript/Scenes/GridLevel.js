@@ -48,14 +48,22 @@ function GridLevel()
             this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * 2);
             var posGroup = new Vector(this.grid.x, this.grid.y);   
             this.gridGroup = new Group('gridGroup', posGroup);
-            console.log(this.gridGroup);
+
             this.gridGroup.collideWorldBound = true;
             
+            var chest = new Collectible();
+            this.collectiblesGroup = new Group('collectibles', posGroup);
+            this.collectiblesGroup.AddGameObject(chest);
+            console.log(this.collectiblesGroup);
 			// operation start
             this.player = new Player();
             this.player.SetPosition(this.grid.caseLength / 2, this.grid.caseLength / 2);
+            
+            //this.gridGroup.AddGameObject(chest);
             this.gridGroup.AddGameObject(this.player);
-            this.Groups.push(this.gridGroup);
+            
+            
+            this.Groups.push(this.gridGroup, this.collectiblesGroup);
 			this.started = true;
 			Print('System:Scene ' + this.name + " Started !");
 			Time.SetTimeWhenSceneLoaded();
@@ -73,10 +81,10 @@ function GridLevel()
             location.reload();
         }
         
-        
-        
 		if (!Application.GamePaused) 
 		{
+            this.grid.Draw();
+            
 			for (var i = 0; i < this.GameObjects.length; i++) 
 			{
 				this.GameObjects[i].Start();
@@ -86,7 +94,7 @@ function GridLevel()
 				this.Groups[i].Start();
 			}
             
-            this.grid.Draw();
+            
 		}
 		if (Application.debugMode) 
 		{

@@ -90,26 +90,26 @@ function Grid(_x, _y, _length, _cases)
 		for (var index = 0; index < this.cases; index++) {
 			for(var j = 0; j < this.cases; j++)
 			{
-				this.Cells.push(new Cell(j, index, this.caseLength));	
+				this.Cells.push(new Cell(j, index, this.caseLength, this));	
 			}			
 		}
 	}
 	this.Awake();
 }
 
-function Cell(_x, _y, _size)
+function Cell(_x, _y, _size, _grid)
 {
 	this.x = _x;
 	this.y = _y;
 	this.size = _size;
 	this.color = "white";
+	this.grid = _grid;
 	
 	this.Draw = function (){
-		console.log("TAMEREDESSINETOI")
 		ctx.strokeStyle = "black";
 		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x * this.size, this.y * this.size, this.size, this.size);
-		ctx.stroke();
+		ctx.fillRect(this.grid.x + this.x * this.size, this.grid.y +  this.y * this.size, this.size, this.size);
+		ctx.strokeRect(this.grid.x + this.x * this.size, this.grid.y + this.y * this.size, this.size, this.size);
 	}	
 }
 

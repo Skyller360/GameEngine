@@ -26,32 +26,29 @@
  *
  *
  * */
-function Player() 
+function Collectible() 
 {
-	this.name = "Player";
+	this.name = "Collectible";
 	this.enabled = true;
 	this.started = false;
 	this.rendered = true;
 	this.fixedToCamera = true;
-    this.color = 'red';
-    this.score = 0;
-    
-    this.moving = false;
-    
+
 	this.MouseOffset = new Vector();
 
 	this.Parent = null;
-	
+    
 	this.Transform = {};
-	this.Transform.RelativePosition = new Vector(0, 0);
+	this.Transform.RelativePosition = new Vector();
 	this.Transform.Position = new Vector();
 	this.Transform.Size = new Vector(101, 171);
-	this.Transform.RelativeScale = new Vector();
+	this.Transform.RelativeScale = new Vector(1,1);
     this.Transform.RelativeScale.x = Application.LoadedScene.grid.caseLength / this.Transform.Size.x;
-    this.Transform.RelativeScale.y = Application.LoadedScene.grid.caseLength / this.Transform.Size.y;  
+    this.Transform.RelativeScale.y = Application.LoadedScene.grid.caseLength / this.Transform.Size.y;
 	this.Transform.Scale = new Vector(1,1);
-	this.Transform.Pivot = new Vector(0.5, 0.5);
-	this.Transform.angle = 0;    
+    this.Transform.Pivot = new Vector(0,0);
+	this.Transform.angle = 0;
+    this.index = null;
 
 	/**
 	 * @function SetPosition
@@ -194,7 +191,7 @@ function Player()
 		That: this.Transform,
 		Material: 
 		{
-			Source: Images['Boy'],
+			Source: Images['Chest Closed'],
 			SizeFrame: new Vector(),
 			CurrentFrame: new Vector(),
 		},
@@ -331,14 +328,22 @@ function Player()
 	{
 		if (!this.started) {
 			// operation start
-            this.goal = new Vector(this.Transform.RelativePosition.x, this.Transform.RelativePosition.y);
             
 			if (this.Physics.colliderIsSameSizeAsTransform) 
 			{
 				this.Physics.Collider = this.Transform;
 			}
-
-			this.started = true;
+            
+            var rndX = Math.Random.RangeInt(0, Application.LoadedScene.grid.cases - 1, true);
+            var rndY = Math.Random.RangeInt(0, Application.LoadedScene.grid.cases - 1, true);
+            
+            this.Transform.RelativePosition.x = rndX * Application.LoadedScene.grid.caseLength;
+            this.Transform.RelativePosition.y = rndY * Application.LoadedScene.grid.caseLength;
+            
+            this.index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * 2);
+			
+            this.started = true;
+            
 			Print('System:GameObject ' + this.name + " Started !");
 		}
 		this.PreUpdate();
@@ -398,69 +403,9 @@ function Player()
 	 * */
 	this.Update = function() 
 	{
-        var index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * 2);
-        Application.LoadedScene.grid.Cells[index].color = this.color;
+		this.Renderer.Draw();
+        this.PostUpdate();	
         
-        if(!this.moving)
-        {
-            // Left
-            if (Input.KeysDown[37]) {
-                this.goal.x = Math.max(Application.LoadedScene.grid.caseLength /2 ,this.Transform.RelativePosition.x - Application.LoadedScene.grid.caseLength);
-                this.moving = true;
-            }
-            // Top
-            else if (Input.KeysDown[38]) {
-                this.goal.y = Math.max(Application.LoadedScene.grid.caseLength /2 ,this.Transform.RelativePosition.y - Application.LoadedScene.grid.caseLength);
-                this.moving = true;
-            }
-            // Right
-            else if (Input.KeysDown[39]) {
-                this.goal.x = Math.min(this.Transform.RelativePosition.x + Application.LoadedScene.grid.caseLength, this.Parent.Transform.Bound.x - Application.LoadedScene.grid.caseLength /2);
-                this.moving = true;
-            }
-            // Both
-            else if (Input.KeysDown[40]) {
-                this.goal.y = Math.min(this.Transform.RelativePosition.y + Application.LoadedScene.grid.caseLength, this.Parent.Transform.Bound.y - Application.LoadedScene.grid.caseLength /2);
-                this.moving = true;
-            }
-        }
-        this.speed = 250;
-        if(this.moving)
-        {
-            this.Transform.RelativePosition.y = Tween.newLinear(this.Transform.RelativePosition.y, this.goal.y, Time.deltaTime * this.speed);
-            this.Transform.RelativePosition.x = Tween.newLinear(this.Transform.RelativePosition.x, this.goal.x, Time.deltaTime * this.speed);
-            
-            if((this.Transform.RelativePosition.x | 0) == (this.goal.x | 0) && (this.Transform.RelativePosition.y | 0) == (this.goal.y | 0))
-            {
-                this.moving = false;
-            }    
-        }
-        
-        // console.log(this.Transform.RelativePosition.x);
-        
-        
-        
-        if(this.Parent.collideWorldBound)
-        {
-            this.Transform.RelativePosition.x = Math.Clamp(this.Transform.RelativePosition.x, (this.Transform.Size.x * this.Transform.Scale.x) / 2, this.Parent.Transform.Bound.x - (this.Transform.Size.x * this.Transform.Scale.x) / 2);
-            this.Transform.RelativePosition.y = Math.Clamp(this.Transform.RelativePosition.y, (this.Transform.Size.y * this.Transform.Scale.y) / 2, this.Parent.Transform.Bound.y - (this.Transform.Size.y * this.Transform.Scale.y) / 2);            
-        }
-        
-        for(var i = 0; i < Application.LoadedScene.collectiblesGroup.GameObjects.length; i++)
-        {
-            var element = Application.LoadedScene.collectiblesGroup.GameObjects[i];
-            if(index == element.index)
-            {
-                Application.LoadedScene.collectiblesGroup.GameObjects.splice(i, 1);
-                i--;
-                var playerCells = Application.LoadedScene.grid.Cells.filter(x => x.color == this.color);
-                this.score = playerCells.length - 1;                
-                playerCells.forEach(x => x.color = "white");
-            }
-        }
-        
-        this.Renderer.Draw();
-		this.PostUpdate();	
 	};
 	/**
 	 * @function PostUpdate
