@@ -40,6 +40,7 @@ function GridLevel()
 	this.Start = function() 
 	{
         
+        this.grid = new Grid(0, 0, nbCol, nbCase);   
 		if (!this.started) 
 		{
 			Time.SetTimeWhenSceneBegin();
