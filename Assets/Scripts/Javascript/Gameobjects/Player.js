@@ -33,8 +33,10 @@ function Player()
 	this.started = false;
 	this.rendered = true;
 	this.fixedToCamera = true;
-    this.color = 'red';
+    this.color = 'rgba(255,0,0,.4)';
     this.score = 0;
+    this.rank = Application.LoadedScene.gridGroup.GameObjects.length;
+    this.previousRank = this.rank;
     
     this.moving = false;
     
@@ -53,6 +55,23 @@ function Player()
 	this.Transform.Pivot = new Vector(0.5, 0.5);
 	this.Transform.angle = 0;    
 
+    this.SetScore = function(_value) {
+        if (this.score != _value) {
+            this.score = _value;
+            var newRank = Application.LoadedScene.gridGroup.GameObjects.sort((x, y) => y.score - x.score).indexOf(this) + 1;
+            this.SetRank(newRank);
+        }
+    }
+    this.SetRank = function(_value) {
+        if (this.rank != _value) {
+            this.previousRank = this.rank;
+            var rankedPlayer = Application.LoadedScene.gridGroup.GameObjects.find(x => x.rank == _value);
+            this.rank = _value;
+            if (rankedPlayer != undefined && rankedPlayer != this) {
+                rankedPlayer.SetRank(_value + 1);
+            }
+        }
+    }
 	/**
 	 * @function SetPosition
 	 * @memberof GameObjects/GameObjects
@@ -396,10 +415,14 @@ function Player()
 	 *
 	 * Call postUpdate function (each frame)
 	 * */
+     var scalejump = 0;
 	this.Update = function() 
 	{
         var index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * 2);
-        Application.LoadedScene.grid.Cells[index].color = this.color;
+        //Application.LoadedScene.grid.Cells[index].color = this.color;
+        Application.LoadedScene.grid.Cells[index].SetColor(this.color);
+        
+        
         
         if(!this.moving)
         {
@@ -427,12 +450,15 @@ function Player()
         this.speed = 250;
         if(this.moving)
         {
-            this.Transform.RelativePosition.y = Tween.newLinear(this.Transform.RelativePosition.y, this.goal.y, Time.deltaTime * this.speed);
-            this.Transform.RelativePosition.x = Tween.newLinear(this.Transform.RelativePosition.x, this.goal.x, Time.deltaTime * this.speed);
-            
+            scalejump += 0.2;
+            this.Transform.RelativePosition.y = Tween.newLinear(this.Transform.RelativePosition.y, this.goal.y, Time.deltaTime * this.speed, 4);
+            this.Transform.RelativePosition.x = Tween.newLinear(this.Transform.RelativePosition.x, this.goal.x, Time.deltaTime * this.speed, 4);
+            this.Transform.Scale.x *= (1 + Math.sin(scalejump) * 0.5);
+            this.Transform.Scale.y *= (1 + Math.sin(scalejump) * 0.5);  
             if((this.Transform.RelativePosition.x | 0) == (this.goal.x | 0) && (this.Transform.RelativePosition.y | 0) == (this.goal.y | 0))
             {
                 this.moving = false;
+                scalejump = 0;
             }    
         }
         
@@ -454,7 +480,8 @@ function Player()
                 Application.LoadedScene.collectiblesGroup.GameObjects.splice(i, 1);
                 i--;
                 var playerCells = Application.LoadedScene.grid.Cells.filter(x => x.color == this.color);
-                this.score = playerCells.length - 1;                
+                this.SetScore(this.score + playerCells.length - 1);
+                //this.score += playerCells.length - 1;                
                 playerCells.forEach(x => x.color = "white");
             }
         }

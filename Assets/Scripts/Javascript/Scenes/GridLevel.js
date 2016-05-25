@@ -24,6 +24,7 @@ function GridLevel()
 
 	this.WorldSize = new Vector(4096,4096);
 
+	this.PositionScore = [];
 	/**
 	 * Called at the instruction new Scene().
 	 * */
@@ -39,29 +40,44 @@ function GridLevel()
 	 * */
 	this.Start = function() 
 	{
-        
-        
 		if (!this.started) 
 		{
             Time.SetTimeWhenSceneBegin();
-            
+
+			
+			
             this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * 2);
             var posGroup = new Vector(this.grid.x, this.grid.y);   
             this.gridGroup = new Group('gridGroup', posGroup);
 
             this.gridGroup.collideWorldBound = true;
             
-            var chest = new Collectible();
+            
             this.collectiblesGroup = new Group('collectibles', posGroup);
-            this.collectiblesGroup.AddGameObject(chest);
-            console.log(this.collectiblesGroup);
+			var self = this;
+			new Timer(TIME_REPOP_CHEST, true, null, function (){
+				if(self.collectiblesGroup.GameObjects.find(x => x.name = "Chest") == undefined){
+					var chest = new Collectible();
+					chest.name = "Chest";
+					self.collectiblesGroup.AddGameObject(chest);	
+				}
+			})
 			// operation start
-            this.player = new Player();
-            this.player.SetPosition(this.grid.caseLength / 2, this.grid.caseLength / 2);
+            var player = new Player();
+			player.name = "moi";
+            player.SetPosition(this.grid.caseLength / 2, this.grid.caseLength / 2);
+			this.gridGroup.AddGameObject(player);
+			player.rank = Application.nbPlayers;
+			
+			for (var index = 0; index < Application.nbPlayers - 1; index++) {
+	            player = new Player();
+				player.name = "Player " + index;
+				player.rank = index + 1;
+				//player.score = Math.Random.RangeInt(0,100, true);
+				this.gridGroup.AddGameObject(player);
+			}
             
             //this.gridGroup.AddGameObject(chest);
-            this.gridGroup.AddGameObject(this.player);
-            
             
             this.Groups.push(this.gridGroup, this.collectiblesGroup);
 			this.started = true;
@@ -93,8 +109,7 @@ function GridLevel()
 			{
 				this.Groups[i].Start();
 			}
-            
-            
+			
 		}
 		if (Application.debugMode) 
 		{
@@ -110,6 +125,22 @@ function GridLevel()
 		if (!Application.GamePaused) 
 		{
 			//Show UI
+			var posX = Application.LoadedScene.grid.length / 2 + canvas.width /2 + 50;
+			var sizeY = Application.LoadedScene.grid.length / this.gridGroup.GameObjects.length;
+			if(this.PositionScore.length == 0){
+				for (var index = 0; index < this.gridGroup.GameObjects.length; index++) {
+					var element = this.gridGroup.GameObjects[index];
+					this.PositionScore.push((element.rank - 1) * sizeY + sizeY / 2);
+				}
+			}
+			for (var index = 0; index < Application.nbPlayers; index++) {
+				var element = this.gridGroup.GameObjects[index];
+				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * sizeY + sizeY / 2, Time.deltaTime * 200, 0.05 );
+				//posY = (element.rank - 1)* sizeY + sizeY / 2;
+				ctx.font = '20px Verdana';
+				ctx.fillStyle = 'black';
+				ctx.fillText('Score de '+element.name+' : '+element.score, posX, this.PositionScore[index]);
+			}
 		} 
 		else 
 		{

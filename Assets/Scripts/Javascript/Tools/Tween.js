@@ -18,13 +18,12 @@ var Tween =
      *  
      * */     
      
-    newLinear: function(_current, _goal, _deltaTime)
+    newLinear: function(_current, _goal, _deltaTime, _tolerance)
     {
         
-        var tolerance = 4;
         var difference = _goal - _current;
         // console.log(difference);
-        if((Math.abs(difference) | 0) <= tolerance){
+        if((Math.abs(difference) | 0) <= _tolerance){
             // console.log('FINISH');
             return _goal;
          }

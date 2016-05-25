@@ -104,13 +104,31 @@ function Cell(_x, _y, _size, _grid)
 	this.size = _size;
 	this.color = "white";
 	this.grid = _grid;
+	this.scalePaint = 100;
+	this.goal = 100;
 	
 	this.Draw = function (){
 		ctx.strokeStyle = "black";
-		ctx.fillStyle = this.color;
-		ctx.fillRect(this.grid.x + this.x * this.size, this.grid.y +  this.y * this.size, this.size, this.size);
+		ctx.drawImage(Images['Block'], this.grid.x + this.x * this.size, this.grid.y +  this.y * this.size, this.size, this.size);
+		if(this.color != 'white')
+		{
+			this.scalePaint = Tween.newLinear(this.scalePaint, this.goal, Time.deltaTime * 150, 0.05);
+			var size = this.size * this.scalePaint / 100;
+			var posX = this.grid.x + this.x * this.size + (1 - this.scalePaint / 100) * this.size / 2;
+			var posY = this.grid.y + this.y * this.size + (1 - this.scalePaint / 100) * this.size / 2;
+			ctx.fillStyle = this.color;
+			//ctx.fillRect(this.grid.x + this.x * this.size, this.grid.y +  this.y * this.size, this.size, this.size);
+			ctx.fillRect(posX, posY, size, size);	
+		}		
 		ctx.strokeRect(this.grid.x + this.x * this.size, this.grid.y + this.y * this.size, this.size, this.size);
 	}	
+	
+	this.SetColor = function(_value){
+		if (this.color != _value) {
+			this.color = _value;
+			this.scalePaint = 10;
+		}
+	}
 }
 
 
