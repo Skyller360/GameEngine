@@ -16,8 +16,31 @@ var Tween =
      * @param {Number} _c - change in value
      * @param {Number} _d - duration
      *  
-     * */
+     * */     
      
+    newLinear: function(_current, _goal, _deltaTime)
+    {
+        
+        var tolerance = 4;
+        var difference = _goal - _current;
+        // console.log(difference);
+        if((Math.abs(difference) | 0) <= tolerance){
+            // console.log('FINISH');
+            return _goal;
+         }
+        if(difference > _deltaTime)
+        {
+            // console.log('FIRST IF');
+            return (_current + _deltaTime);
+        }
+        if(difference < _deltaTime)
+        {
+            // console.log('SECOND IF');
+            return (_current - _deltaTime);
+        }
+        
+    },
+    
     Linear: function (_t, _b, _c, _d) {return _c * _t / _d + _b;},
     /**
      *

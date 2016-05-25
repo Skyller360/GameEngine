@@ -22,13 +22,12 @@ Gravity.y = -9.81;
 // PATH FICHIER AUDIO
 
 
-
-
 var Application = 
 {
 	LoadedScene: null,
 	gamePaused: false,
-	debugMode: false
+	debugMode: true,
+	nbPlayers: 4
 };
 
 var imagesLoaded = 0;

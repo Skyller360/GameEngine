@@ -39,21 +39,21 @@ function Loader()
 		{
 			Time.SetTimeWhenGameBegin();
 			// operation start
-			Scenes["SceneHub"] = new SceneHub();
-			Scenes["SceneInput"] = new SceneInput();
-			Scenes["SceneCamera"] = new SceneCamera();
-			Scenes["SceneGroup"] = new SceneGroup();
-			Scenes["SceneParticules"] = new SceneParticules();
-			Scenes["SceneVector"]  = new SceneVector();
-			Scenes["SceneTween"]  = new SceneTween();
-			Scenes["ScenePostEffect"]  = new ScenePostEffect();
-			Scenes["SceneAnim"]  = new SceneAnim();
-			Scenes["SceneDialogue"]  = new SceneDialogue();
-			Scenes["ScenePhysics_Debug"]  = new ScenePhysics_Debug();
-			Scenes["ScenePathFinding"]  = new ScenePathFinding();
-			Scenes["SceneSave"]  = new SceneSave();
-			Scenes["SceneIA"]  = new SceneIA();		
-			Scenes["AudioScene"]  = new AudioScene();			
+			// Scenes["SceneHub"] = new SceneHub();
+			// Scenes["SceneInput"] = new SceneInput();
+			// Scenes["SceneCamera"] = new SceneCamera();
+			// Scenes["SceneGroup"] = new SceneGroup();
+			// Scenes["SceneParticules"] = new SceneParticules();
+			// Scenes["SceneVector"]  = new SceneVector();
+			// Scenes["SceneTween"]  = new SceneTween();
+			// Scenes["ScenePostEffect"]  = new ScenePostEffect();
+			// Scenes["SceneAnim"]  = new SceneAnim();
+			// Scenes["SceneDialogue"]  = new SceneDialogue();
+			// Scenes["ScenePhysics_Debug"]  = new ScenePhysics_Debug();
+			// Scenes["ScenePathFinding"]  = new ScenePathFinding();
+			// Scenes["SceneSave"]  = new SceneSave();
+			// Scenes["SceneIA"]  = new SceneIA();		
+			// Scenes["AudioScene"]  = new AudioScene();			
 			Scenes["GridLevel"]  = new GridLevel();			
 
 			LoadImages();

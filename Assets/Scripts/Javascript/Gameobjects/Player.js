@@ -26,30 +26,31 @@
  *
  *
  * */
-function Player(_name) 
+function Player() 
 {
-    
-	this.name = _name;
+	this.name = "Player";
 	this.enabled = true;
 	this.started = false;
 	this.rendered = true;
-    this.velocity = 5;
 	this.fixedToCamera = true;
-    this.box = null;
-
+    this.velocity = Application.LoadedScene.grid.caseLength;
+    
+    this.moving = false;
+    
 	this.MouseOffset = new Vector();
 
 	this.Parent = null;
 	
 	this.Transform = {};
-	this.Transform.RelativePosition = new Vector();
+	this.Transform.RelativePosition = new Vector(0, 0);
 	this.Transform.Position = new Vector();
-	this.Transform.Size = new Vector();
-	this.Transform.RelativeScale = new Vector(1,1);
+	this.Transform.Size = new Vector(101, 171);
+	this.Transform.RelativeScale = new Vector();
+    this.Transform.RelativeScale.x = Application.LoadedScene.grid.caseLength / this.Transform.Size.x;
+    this.Transform.RelativeScale.y = Application.LoadedScene.grid.caseLength / this.Transform.Size.y;  
 	this.Transform.Scale = new Vector(1,1);
-	this.Transform.Pivot = new Vector(0,0);
-	this.Transform.angle = 0;
-    
+	this.Transform.Pivot = new Vector(0.5, 0.5);
+	this.Transform.angle = 0;    
 
 	/**
 	 * @function SetPosition
@@ -192,7 +193,7 @@ function Player(_name)
 		That: this.Transform,
 		Material: 
 		{
-			Source: "",
+			Source: Images['Boy'],
 			SizeFrame: new Vector(),
 			CurrentFrame: new Vector(),
 		},
@@ -216,8 +217,56 @@ function Player(_name)
 		 *  
 		 * */
 		Draw: function() 
-		{            
-			ctx.fillRect(this.That.Position.x, this.That.Position.y, this.That.Size.x, this.That.Size.y);
+		{
+			var ScaledSizeX = this.That.Size.x*this.That.Scale.x;
+			var ScaledSizeY = this.That.Size.y*this.That.Scale.y;
+
+			ctx.save();
+			ctx.translate((this.That.Position.x), (this.That.Position.y));
+			ctx.rotate(Math.DegreeToRadian(this.That.angle));
+			if (this.isSpriteSheet) 
+			{
+				if (this.Animation.animated)
+				{	
+					if (this.animationCount > this.Animation.totalAnimationLength / this.Animation.Current.length) 
+					{
+						this.Animation.currentIndex ++ ;
+						this.animationCount = 0 ;
+						if (this.Animation.currentIndex > this.Animation.Current.length-1) 
+						{
+							this.Animation.currentIndex = 0;
+						}
+					} 
+					
+					this.animationCount += Time.deltaTime;
+					
+				}
+				else 
+				{
+					this.animationCount = 0;
+					this.Animation.currentIndex = 0;
+				}
+				this.Material.CurrentFrame = this.Animation.Current[this.Animation.currentIndex];
+
+				ctx.drawImage(this.Material.Source,
+								this.Material.CurrentFrame.x,
+								this.Material.CurrentFrame.y,
+								this.Material.SizeFrame.x,
+								this.Material.SizeFrame.y,
+								-this.That.Pivot.x*ScaledSizeX,
+								-this.That.Pivot.y*ScaledSizeY,
+								ScaledSizeX,
+								ScaledSizeY);
+			} 
+			else 
+			{
+				ctx.drawImage(this.Material.Source,
+								-this.That.Pivot.x*ScaledSizeX,
+								-this.That.Pivot.y*ScaledSizeY,
+								ScaledSizeX,
+								ScaledSizeY);
+			}
+			ctx.restore();
 		}
 					
 
@@ -256,11 +305,6 @@ function Player(_name)
  		}
  		this.Renderer.Animation.Current = this.Renderer.Animation.Animations[0];
 	}
-	
-	this.SetBox = function()
-	{
-		this.box = new Box(this.Transform.Position.x, this.Transform.Position.y, this.Transform.Size.x, this.Transform.Size.y)	
-	}
 
 	/**
 	 * @function Awake
@@ -285,6 +329,9 @@ function Player(_name)
 	this.Start = function() 
 	{
 		if (!this.started) {
+			// operation start
+            this.goal = new Vector(this.Transform.RelativePosition.x, this.Transform.RelativePosition.y);
+            console.log(this.Transform.RelativePosition.x)
 			if (this.Physics.colliderIsSameSizeAsTransform) 
 			{
 				this.Physics.Collider = this.Transform;
@@ -349,25 +396,60 @@ function Player(_name)
 	 * Call postUpdate function (each frame)
 	 * */
 	this.Update = function() 
-	{        
-		if (Input.KeysDown[37]) {
-			this.Transform.RelativePosition.x -= this.velocity;		
-		}
-		// Top
-		if (Input.KeysDown[38]) {
-			this.Transform.RelativePosition.y -= this.velocity;
-		}
-		// Right
-		if (Input.KeysDown[39]) {
-			this.Transform.RelativePosition.x += this.velocity;
-		}
-		// Both
-		if (Input.KeysDown[40]) {
-			this.Transform.RelativePosition.y += this.velocity;
-		}
-		
-		ctx.fillStyle = '#2C3E50';       
-
+	{
+        if(!this.moving)
+        {
+            // Left
+            if (Input.KeysDown[37]) {
+                // this.Transform.RelativePosition.x -= this.velocity;
+                this.goal.x = Math.max(Application.LoadedScene.grid.caseLength /2 ,this.Transform.RelativePosition.x - Application.LoadedScene.grid.caseLength);
+                this.moving = true;
+            }
+            // Top
+            else if (Input.KeysDown[38]) {
+                // this.Transform.RelativePosition.y -= this.velocity;
+                this.goal.y = Math.max(Application.LoadedScene.grid.caseLength /2 ,this.Transform.RelativePosition.y - Application.LoadedScene.grid.caseLength);
+                this.moving = true;
+            }
+            // Right
+            else if (Input.KeysDown[39]) {
+                // this.Transform.RelativePosition.x += this.velocity;
+                this.goal.x = Math.min(this.Transform.RelativePosition.x + Application.LoadedScene.grid.caseLength, this.Parent.Transform.Bound.x - Application.LoadedScene.grid.caseLength /2);
+                this.moving = true;
+            }
+            // Both
+            else if (Input.KeysDown[40]) {
+                // this.Transform.RelativePosition.y += this.velocity;
+                this.goal.y = Math.min(this.Transform.RelativePosition.y + Application.LoadedScene.grid.caseLength, this.Parent.Transform.Bound.y - Application.LoadedScene.grid.caseLength /2);
+                this.moving = true;
+            }
+        }
+        // console.log(Application.LoadedScene.grid.caseLength);
+        this.speed = 250;
+        // console.log(this.moving);
+        if(this.moving)
+        {
+            this.Transform.RelativePosition.y = Tween.newLinear(this.Transform.RelativePosition.y, this.goal.y, Time.deltaTime * this.speed);
+            this.Transform.RelativePosition.x = Tween.newLinear(this.Transform.RelativePosition.x, this.goal.x, Time.deltaTime * this.speed);
+            console.log("after tween y : " + this.Transform.RelativePosition.y);
+            if((this.Transform.RelativePosition.x | 0) == (this.goal.x | 0) && (this.Transform.RelativePosition.y | 0) == (this.goal.y | 0))
+            {
+                console.log("PROUT")
+                
+                this.moving = false;
+            }    
+        }
+        
+        // console.log(this.Transform.RelativePosition.x);
+        
+        
+        
+        if(this.Parent.collideWorldBound)
+        {
+            this.Transform.RelativePosition.x = Math.Clamp(this.Transform.RelativePosition.x, (this.Transform.Size.x * this.Transform.Scale.x) / 2, this.Parent.Transform.Bound.x - (this.Transform.Size.x * this.Transform.Scale.x) / 2);
+            this.Transform.RelativePosition.y = Math.Clamp(this.Transform.RelativePosition.y, (this.Transform.Size.y * this.Transform.Scale.y) / 2, this.Parent.Transform.Bound.y - (this.Transform.Size.y * this.Transform.Scale.y) / 2);            
+        }
+        
         this.Renderer.Draw();
 		this.PostUpdate();	
 	};

@@ -40,11 +40,22 @@ function GridLevel()
 	this.Start = function() 
 	{
         
-        this.grid = new Grid(0, 0, nbCol, nbCase);   
+        
 		if (!this.started) 
 		{
-			Time.SetTimeWhenSceneBegin();
+            Time.SetTimeWhenSceneBegin();
+            
+            this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * 2);
+            var posGroup = new Vector(this.grid.x, this.grid.y);   
+            this.gridGroup = new Group('gridGroup', posGroup);
+            console.log(this.gridGroup);
+            this.gridGroup.collideWorldBound = true;
+            
 			// operation start
+            this.player = new Player();
+            this.player.SetPosition(this.grid.caseLength / 2, this.grid.caseLength / 2);
+            this.gridGroup.AddGameObject(this.player);
+            this.Groups.push(this.gridGroup);
 			this.started = true;
 			Print('System:Scene ' + this.name + " Started !");
 			Time.SetTimeWhenSceneLoaded();
@@ -57,6 +68,13 @@ function GridLevel()
 	 * */
 	this.Update = function() 
 	{
+        if(Input.KeysDown[9])
+        {
+            location.reload();
+        }
+        
+        
+        
 		if (!Application.GamePaused) 
 		{
 			for (var i = 0; i < this.GameObjects.length; i++) 
@@ -67,6 +85,8 @@ function GridLevel()
 			{
 				this.Groups[i].Start();
 			}
+            
+            this.grid.Draw();
 		}
 		if (Application.debugMode) 
 		{

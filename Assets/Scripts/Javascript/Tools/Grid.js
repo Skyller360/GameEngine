@@ -14,9 +14,10 @@ function Grid(_x, _y, _length, _cases)
 	this.y = _y;
 	this.length = _length;
 	this.cases = _cases;
-	this.caseLength = this.length / this.cases
+	this.caseLength = this.length / this.cases;
 	this.Tiles = new Array(this.cases * this.cases).fill(0);
 	this.BestPath = null;
+	this.Cells = [];
 
 /**
 *
@@ -24,21 +25,28 @@ function Grid(_x, _y, _length, _cases)
 * default black color 
 * 
 * */
-	this.Draw = function() 
-	{
-		ctx.strokeStyle = '#000000';
-		ctx.fillStyle = '#000000';
-		for (var i = 0; i * this.caseLength < this.length; i++) 
-		{
-			for (var j = 0; j * this.caseLength < this.length; j++) 
-			{
-				ctx.strokeRect(this.x + i * this.caseLength, this.y + j * this.caseLength, this.caseLength, this.caseLength);
-				// Draw Obstacles
-				if (this.Tiles[j * this.cases + i] == 1) {
-					ctx.fillStyle = '#000000';
-					ctx.fillRect(this.x + i * this.caseLength, this.y + j * this.caseLength, this.caseLength, this.caseLength);
-				}
-			}	
+	// this.Draw = function() 
+	// {
+	// 	ctx.strokeStyle = '#000000';
+	// 	ctx.fillStyle = '#000000';
+	// 	for (var i = 0; i * this.caseLength < this.length; i++) 
+	// 	{
+	// 		for (var j = 0; j * this.caseLength < this.length; j++) 
+	// 		{
+	// 			ctx.strokeRect(this.x + i * this.caseLength, this.y + j * this.caseLength, this.caseLength, this.caseLength);
+	// 			// Draw Obstacles
+	// 			if (this.Tiles[j * this.cases + i] == 1) {
+	// 				this.Cells.push(new Cell());
+	// 				ctx.fillStyle = '#000000';
+	// 				ctx.fillRect(this.x + i * this.caseLength, this.y + j * this.caseLength, this.caseLength, this.caseLength);
+	// 			}
+	// 		}	
+	// 	}
+	// }
+	this.Draw = function () {
+		for (var index = 0; index < this.Cells.length; index++) {
+			var element = this.Cells[index];
+			element.Draw();
 		}
 	}
 
@@ -76,7 +84,35 @@ function Grid(_x, _y, _length, _cases)
 			}
 		}
 	}
+	
+	this.Awake = function()
+	{
+		for (var index = 0; index < this.cases; index++) {
+			for(var j = 0; j < this.cases; j++)
+			{
+				this.Cells.push(new Cell(j, index, this.caseLength));	
+			}			
+		}
+	}
+	this.Awake();
 }
+
+function Cell(_x, _y, _size)
+{
+	this.x = _x;
+	this.y = _y;
+	this.size = _size;
+	this.color = "white";
+	
+	this.Draw = function (){
+		console.log("TAMEREDESSINETOI")
+		ctx.strokeStyle = "black";
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x * this.size, this.y * this.size, this.size, this.size);
+		ctx.stroke();
+	}	
+}
+
 
 
 	

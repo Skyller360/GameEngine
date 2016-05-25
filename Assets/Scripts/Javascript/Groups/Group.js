@@ -20,6 +20,14 @@ function Group(_name, _position)
 	this.Transform.Position = new Vector(0, 0);
 	this.Transform.RelativeScale = new Vector(1, 1);
 	this.Transform.Scale = new Vector(1, 1);
+	this.Transform.Bound = new Vector();
+	this.collideWorldBound = false;
+
+	
+	this.SetCollideWorldBound = function(_value)
+	{
+		this.collideWorldBound = _value;
+	}
 
 	/**
 	 * Called at the instruction new Group().
@@ -36,6 +44,13 @@ function Group(_name, _position)
 	{
 		if (!this.started)
 		{
+			if (this.collideWorldBound) 
+			{
+				// console.log(Application.LoadedScene.grid.length)
+				//  this.Transform.RelativePosition.x +
+				this.Transform.Bound.x = Application.LoadedScene.grid.length;
+				this.Transform.Bound.y = Application.LoadedScene.grid.length;
+			}
 			this.started = true;
 			Print('System:Group ' + this.name + " Started !");
 		}
@@ -88,5 +103,7 @@ function Group(_name, _position)
 		var index = this.GameObjects.indexOf(_go);
 		return this.GameObjects.splice(index, 1)[0];
 	};
+	
+	
 	this.Awake();
 }
