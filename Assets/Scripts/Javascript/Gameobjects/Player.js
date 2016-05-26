@@ -47,7 +47,7 @@ function Player()
 	this.Transform = {};
 	this.Transform.RelativePosition = new Vector(0, 0);
 	this.Transform.Position = new Vector();
-	this.Transform.Size = new Vector(101, 171);
+	this.Transform.Size = new Vector(131, 188);
 	this.Transform.RelativeScale = new Vector();
     this.Transform.RelativeScale.x = Application.LoadedScene.grid.caseLength / this.Transform.Size.x;
     this.Transform.RelativeScale.y = Application.LoadedScene.grid.caseLength / this.Transform.Size.y;  
@@ -215,7 +215,7 @@ function Player()
 		That: this.Transform,
 		Material: 
 		{
-			Source: Images['Boy'],
+			Source: Images['alien'],
 			SizeFrame: new Vector(),
 			CurrentFrame: new Vector(),
 		},

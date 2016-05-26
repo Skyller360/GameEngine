@@ -71,7 +71,8 @@ var ImagesPath =
 	{ name:"Fond",path: "Examples/Fond.jpg"},
 	{ name:"bgDemo",path: "Examples/bgDemo.jpg"},
 	{ name:"alphaMask3",path: "Examples/AlphaMask/mask.png"},
-	{ name:"sprite",path: "Examples/drake.png"}
+	{ name:"sprite",path: "Examples/drake.png"},
+	{ name:"alien",path: "Examples/alien.png"}
 ];
 var Images = {};
 
