@@ -48,7 +48,7 @@ function GridLevel()
             Time.SetTimeWhenSceneBegin();
             //TIMER
            	this.Timer = new Timer(TIME_GAME, false, null, function () {
-            	Application.GamePaused = true;
+            	//Application.GamePaused = true;
             });
 			
 			
@@ -129,41 +129,73 @@ function GridLevel()
 	this.GUI = function() 
 	{
 		// AFFICHAGE TIMER
-		ctx.font = '40px Verdana';
+		//ctx.fillStyle = 'black';
+		//ctx.fillRect( ((canvas.width - canvas.height) * 0.5) - 200 , 0 , 200 , 75 );
+		document.getElementById("canvas").style.cursor = "initial";
+		var fontSize = 40;
+		ctx.font = 'Bold '+fontSize+'px Verdana';
 		ctx.fillStyle = 'black';
-		ctx.fillText("TIMER : " + (this.Timer.duration - this.Timer.currentTime).toFixed(2), 100, canvas.height / 2);
+		ctx.textAlign = 'center';
+		var theTimer = this.Timer.duration - this.Timer.currentTime;
+
+		var timerPosX = ( (canvas.width - canvas.height) * 0.5 - 10);
+		var timerPosX = (canvas.width  - Application.LoadedScene.grid.length) / 4;
+		var timerPosY = fontSize/2;
+		ctx.fillText((theTimer).toFixed(2), timerPosX, timerPosY);
+
+
 
 		
 		if (!Application.GamePaused) 
 		{
 			//Show UI
 			var size = sizeX = sizeY = Application.LoadedScene.grid.length / this.gridGroup.GameObjects.length;
+
 			var posX = Application.LoadedScene.grid.length / 2 + canvas.width /2;
+
 			if(this.PositionScore.length == 0){
 				for (var index = 0; index < this.gridGroup.GameObjects.length; index++) {
 					var element = this.gridGroup.GameObjects[index];
 					this.PositionScore.push((element.rank - 1) * size + size / 2);
 				}
 			}
+
+
 			for (var index = 0; index < Application.nbPlayers; index++) {
 				var element = this.gridGroup.GameObjects[index];
 				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
-				var scale = Math.min(size / element.Transform.Size.x, size/element.Transform.Size.y, 1);
-				ctx.drawImage(element.Renderer.Material.Source, posX + element.Transform.Size.x * scale / 2, this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
-				 					element.Transform.Size.x * scale, element.Transform.Size.y * scale
+				var scale = Math.min(size / element.Transform.Size.x, size / element.Transform.Size.y, 1);
+/*				ctx.strokeRect(
+					posX + element.Transform.Size.x * scale / 2,
+					this.PositionScore[index] - element.Transform.Size.y * scale / 2,
+					element.Transform.Size.x * scale,
+					element.Transform.Size.y * scale
+				);*/
+				ctx.drawImage(	element.Renderer.Material.Source,
+								posX + element.Transform.Size.x * scale / 2,
+								this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
+								element.Transform.Size.x * scale,
+								element.Transform.Size.y * scale
 				 );
-				
-				
-				var sizeFont = 20;
+
+				var sizeFont = 40;
 				if(scale <= 0.4)
 				{
 					sizeFont *= 0.7;
 				}
-				ctx.font = sizeFont+'px Verdana';
-				ctx.fillStyle = 'black';
+				ctx.font = sizeFont+'px Comic Sans MS';
+				ctx.fillStyle = '#E0A33A';
 				ctx.textAlign="center";
 				ctx.textBaseline="middle"; 
-				ctx.fillText(element.score, posX + element.Transform.Size.x * scale * 1.5 + 50, this.PositionScore[index]);
+				ctx.fillText(
+					element.score,
+					posX + element.Transform.Size.x * scale * 1.3,
+					this.PositionScore[index]-10
+				);
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#F8C557";
+				ctx.strokeText(element.score,posX + element.Transform.Size.x * scale * 1.3,
+					this.PositionScore[index]-10);
 			}
 		} 
 		else 

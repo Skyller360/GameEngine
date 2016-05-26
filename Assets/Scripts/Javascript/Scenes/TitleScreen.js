@@ -23,7 +23,7 @@ function TitleScreen()
 	this.started = false;
 
 	this.connectedPlayers = Application.nbPlayers;
-	this.isMasterPlayer = true;
+	this.host = true;
 
 	this.WorldSize = new Vector(4096,4096);
 
@@ -80,50 +80,53 @@ function TitleScreen()
 	 * */
 	this.GUI = function() 
 	{
+		document.getElementById("canvas").style.cursor = "initial";
 		if (!Application.GamePaused) 
 		{
 			//Show UI
+			var txtTitle = "Techno Bash";
+			var txtConnected = "Connected x ";
+			var txtPLay = "Play";
+			var txtWainting = "Wainting players ...";
 
 			/* Game Title  */
-			ctx.font = '40px Verdana';
+			ctx.font = '60px Arial Black';
 			ctx.fillStyle = 'black';
-			ctx.textAlign="center";
-			ctx.textBaseline="middle";
 
 			var cW = canvas.width;
 			var cH = canvas.height;
-			ctx.fillText('Technobel Bash', cW/2, cH/4)
+			ctx.fillText(txtTitle, cW/2, cH/4)
 
 			/* Connected players   */
 			ctx.font = '15px Verdana';
-			ctx.fillText('Connected player: '+ this.connectedPlayers, cW/2, cH/2 );
+			ctx.fillText(txtConnected + this.connectedPlayers, cW/2 , cH/2 );
 
 
-
-			if(this.isMasterPlayer){
-				/* Play button */
+			if(this.host){
+				/* Play button for host */
 				var box = new Box();
 					box.x = (cW/2)-100;
 					box.y = cH/2+50;
 					box.w = 200;
 					box.h = 50;
-				ctx.font = '20px Verdana';
-				ctx.fillStyle = 'lightgreen';
-
+					ctx.font = '20px Verdana';
+					ctx.fillStyle = 'lightgreen';
 
 				if (Physics.CheckCollision(Input.MousePosition, box)) {
 					ctx.fillStyle = "#4CB064";
+					document.getElementById("canvas").style.cursor = "pointer";
 					if (Input.mouseLongClick) {
 						Application.LoadedScene = Scenes['GridLevel'];
 					}
 				}
-
 				ctx.fillRect(box.x, box.y, box.w, box.h);
 				ctx.fillStyle = "black";
 				ctx.textAlign = 'center';
-				ctx.fillText('Play', box.x+100, box.y+25);
+				ctx.textBaseline = 'middle';
+				ctx.fillText(txtPLay , box.x+100, box.y+25);
 			}else{
-				ctx.fillText('Wainting Players ...', cW/2, cH/2+150);
+				/* Waiting message for other */
+				ctx.fillText(txtWainting , cW/2+10, cH/2+50);
 			}
 		} 
 		else 

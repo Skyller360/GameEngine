@@ -22,13 +22,13 @@ Gravity.y = -9.81;
 // PATH FICHIER AUDIO
 
 var TIME_REPOP_CHEST = 1;
-var TIME_GAME = 30;
+var TIME_GAME = 250;
 var Application = 
 {
 	LoadedScene: null,
 	gamePaused: false,
-	debugMode: true,
-	nbPlayers: 11
+	debugMode: false,
+	nbPlayers: 3
 };
 
 var imagesLoaded = 0;
