@@ -40,8 +40,8 @@ function Loader()
 			Time.SetTimeWhenGameBegin();
 			// operation start			
 			Scenes["GridLevel"]  = new GridLevel();		
-
-			Scenes["TitleScreen"]  = new TitleScreen();		
+			Scenes["TitleScreen"]  = new TitleScreen();	
+			Scenes["EndGame"] = new EndGameScreen();		
 
 			LoadImages();
 			this.started = true;

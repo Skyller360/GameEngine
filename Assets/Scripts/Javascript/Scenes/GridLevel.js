@@ -53,7 +53,6 @@ function GridLevel()
             // });
 
 			
-			
             this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * NB_CASES_BY_PLAYER);
             var posGroup = new Vector(this.grid.x, this.grid.y);   
             this.gridGroup = new Group('gridGroup', posGroup);
@@ -65,9 +64,11 @@ function GridLevel()
 			var self = this;
 			new Timer(TIME_REPOP_CHEST, true, null, function (){
 				if(self.collectiblesGroup.GameObjects.find(x => x.name = "Chest") == undefined){
-					var chest = new Collectible();
-					chest.name = "Chest";
-					self.collectiblesGroup.AddGameObject(chest);	
+					if (Application.LoadedScene == Scenes["GridLevel"]) {
+						var chest = new Collectible();
+						chest.name = "Chest";
+						self.collectiblesGroup.AddGameObject(chest);
+					}
 				}
 			})
 			// operation start
@@ -100,6 +101,8 @@ function GridLevel()
 				this.gridGroup.AddGameObject(player);
 			}
             
+            scoreGestion = new ScoreGestion(this.gridGroup);
+
             this.Groups.push(this.gridGroup, this.collectiblesGroup);
 			this.started = true;
 			Print('System:Scene ' + this.name + " Started !");
@@ -161,11 +164,12 @@ function GridLevel()
 		// ctx.fillText((theTimer).toFixed(2), timerPosX, timerPosY);
 
 
-
-		
 		if (!Application.GamePaused) 
 		{
 			//Show UI
+
+			//scoreGestion.Show();
+
 			var size = sizeX = sizeY = Application.LoadedScene.grid.length / this.gridGroup.GameObjects.length;
 
 			var posX = Application.LoadedScene.grid.length / 2 + canvas.width /2;

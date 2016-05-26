@@ -19,7 +19,8 @@ var Scenes = {};
 var Gravity = new Vector();
 Gravity.y = -9.81;
 
-// PATH FICHIER AUDIO
+
+var scoreGestion = null;
 var NB_CASES_BY_PLAYER = 8;
 var TIME_REPOP_CHEST = 1;
 var TIME_GAME = 250;
