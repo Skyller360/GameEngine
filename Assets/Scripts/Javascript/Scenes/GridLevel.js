@@ -25,6 +25,8 @@ function GridLevel()
 	this.WorldSize = new Vector(4096,4096);
 
 	this.PositionScore = [];
+
+	this.GameTimer = 500;
 	/**
 	 * Called at the instruction new Scene().
 	 * */
@@ -141,6 +143,7 @@ function GridLevel()
 				ctx.fillStyle = 'black';
 				ctx.fillText('Score de '+element.name+' : '+element.score, posX, this.PositionScore[index]);
 			}
+
 		} 
 		else 
 		{
