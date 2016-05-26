@@ -53,7 +53,9 @@ function Player()
     this.Transform.RelativeScale.y = Application.LoadedScene.grid.caseLength / this.Transform.Size.y;  
 	this.Transform.Scale = new Vector(1,1);
 	this.Transform.Pivot = new Vector(0.5, 0.5);
-	this.Transform.angle = 0;    
+	this.Transform.angle = 0;   
+
+	this.speed = 250; 
 
     this.SetScore = function(_value) {
         if (this.score != _value) {
@@ -419,10 +421,7 @@ function Player()
 	this.Update = function() 
 	{
         var index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * 2);
-        //Application.LoadedScene.grid.Cells[index].color = this.color;
         Application.LoadedScene.grid.Cells[index].SetColor(this.color);
-        
-        
         
         if(!this.moving)
         {
@@ -447,8 +446,7 @@ function Player()
                 this.moving = true;
             }
         }
-        this.speed = 250;
-        if(this.moving)
+        else
         {
             scalejump += 0.2;
             this.Transform.RelativePosition.y = Tween.newLinear(this.Transform.RelativePosition.y, this.goal.y, Time.deltaTime * this.speed, 4);
@@ -462,29 +460,13 @@ function Player()
             }    
         }
         
-        // console.log(this.Transform.RelativePosition.x);
-        
-        
-        
         if(this.Parent.collideWorldBound)
         {
             this.Transform.RelativePosition.x = Math.Clamp(this.Transform.RelativePosition.x, (this.Transform.Size.x * this.Transform.Scale.x) / 2, this.Parent.Transform.Bound.x - (this.Transform.Size.x * this.Transform.Scale.x) / 2);
             this.Transform.RelativePosition.y = Math.Clamp(this.Transform.RelativePosition.y, (this.Transform.Size.y * this.Transform.Scale.y) / 2, this.Parent.Transform.Bound.y - (this.Transform.Size.y * this.Transform.Scale.y) / 2);            
         }
         
-        for(var i = 0; i < Application.LoadedScene.collectiblesGroup.GameObjects.length; i++)
-        {
-            var element = Application.LoadedScene.collectiblesGroup.GameObjects[i];
-            if(index == element.index)
-            {
-                Application.LoadedScene.collectiblesGroup.GameObjects.splice(i, 1);
-                i--;
-                var playerCells = Application.LoadedScene.grid.Cells.filter(x => x.color == this.color);
-                this.SetScore(this.score + playerCells.length - 1);
-                //this.score += playerCells.length - 1;                
-                playerCells.forEach(x => x.color = "white");
-            }
-        }
+        this.CheckCollectibles(index);
         
         this.Renderer.Draw();
 		this.PostUpdate();	
@@ -504,6 +486,22 @@ function Player()
 		}
 		this.GUI();	
 	};
+
+
+	this.CheckCollectibles = function(index) {
+		for(var i = 0; i < Application.LoadedScene.collectiblesGroup.GameObjects.length; i++)
+        {
+            var element = Application.LoadedScene.collectiblesGroup.GameObjects[i];
+            if(index == element.index)
+            {
+                Application.LoadedScene.collectiblesGroup.GameObjects.splice(i, 1);
+                i--;
+                var playerCells = Application.LoadedScene.grid.Cells.filter(x => x.color == this.color);
+                this.SetScore(this.score + playerCells.length - 1);
+                playerCells.forEach(x => x.color = "white");
+            }
+        }
+	}
 
 	/**
 	 * @function GUI
