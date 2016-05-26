@@ -22,6 +22,7 @@ Gravity.y = -9.81;
 // PATH FICHIER AUDIO
 
 var TIME_REPOP_CHEST = 1;
+var TIME_GAME = 30;
 var Application = 
 {
 	LoadedScene: null,

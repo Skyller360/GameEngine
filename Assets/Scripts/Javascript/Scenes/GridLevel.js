@@ -21,6 +21,7 @@ function GridLevel()
 	this.CurrentCamera = null;
 	this.AlphaMask = null;
 	this.started = false;
+	this.Timer = null;
 
 	this.WorldSize = new Vector(4096,4096);
 
@@ -43,7 +44,10 @@ function GridLevel()
 		if (!this.started) 
 		{
             Time.SetTimeWhenSceneBegin();
-
+            //TIMER
+           	this.Timer = new Timer(TIME_GAME, false, null, function () {
+            	Application.GamePaused = true;
+            });
 			
 			
             this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * 2);
@@ -122,6 +126,12 @@ function GridLevel()
 	 * */
 	this.GUI = function() 
 	{
+		// AFFICHAGE TIMER
+		ctx.font = '40px Verdana';
+		ctx.fillStyle = 'black';
+		ctx.fillText("TIMER : " + (this.Timer.duration - this.Timer.currentTime).toFixed(2), 100, canvas.height / 2);
+
+		
 		if (!Application.GamePaused) 
 		{
 			//Show UI
