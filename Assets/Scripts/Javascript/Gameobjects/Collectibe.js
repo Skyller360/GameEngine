@@ -340,7 +340,7 @@ function Collectible()
             this.Transform.RelativePosition.x = rndX * Application.LoadedScene.grid.caseLength;
             this.Transform.RelativePosition.y = rndY * Application.LoadedScene.grid.caseLength;
             
-            this.index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * 2);
+            this.index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * NB_CASES_BY_PLAYER);
 			
             this.started = true;
             

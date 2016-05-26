@@ -420,7 +420,7 @@ function Player()
      var scalejump = 0;
 	this.Update = function() 
 	{
-        var index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * 2);
+        var index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * NB_CASES_BY_PLAYER);
         Application.LoadedScene.grid.Cells[index].SetColor(this.color);
         
         if(!this.moving)
@@ -458,6 +458,8 @@ function Player()
                 this.moving = false;
                 scalejump = 0;
             }    
+			var data = { 'position' : this.Transform.Position};
+			socket.emit('updatePos', data);
         }
         
         if(this.Parent.collideWorldBound)
@@ -467,7 +469,12 @@ function Player()
         }
         
         this.CheckCollectibles(index);
-        
+		
+		// socket.on('updatePosServ', function(data)
+		// {
+			
+		// });
+		
         this.Renderer.Draw();
 		this.PostUpdate();	
 	};

@@ -45,12 +45,12 @@ function GridLevel()
 		{
             Time.SetTimeWhenSceneBegin();
             //TIMER
-           	this.Timer = new Timer(TIME_GAME, false, null, function () {
-            	Application.GamePaused = true;
-            });
+           	// this.Timer = new Timer(TIME_GAME, false, null, function () {
+            // 	Application.GamePaused = true;
+            // });
 			
 			
-            this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * 2);
+            this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * NB_CASES_BY_PLAYER);
             var posGroup = new Vector(this.grid.x, this.grid.y);   
             this.gridGroup = new Group('gridGroup', posGroup);
 
@@ -73,15 +73,28 @@ function GridLevel()
 			this.gridGroup.AddGameObject(player);
 			player.rank = Application.nbPlayers;
 			
-			for (var index = 0; index < Application.nbPlayers - 1; index++) {
-	            player = new Player();
-				player.name = "Player " + index;
+			// for (var index = 0; index < Application.nbPlayers - 1; index++) {
+	        //     player = new Player();
+			// 	player.name = "Player " + index;
+			// 	player.rank = index + 1;
+			// 	//player.score = Math.Random.RangeInt(0,100, true);
+			// 	this.gridGroup.AddGameObject(player);
+			// }
+			
+			console.log(Application.tempNbPlayers);
+			
+			for (var index = 0; index < Application.tempNbPlayers; index++) {
+				var rndX =  Math.Random.RangeInt(0, this.grid.caseLength, true);
+				var rndY = Math.Random.RangeInt(0, this.grid.caseLength, true);
+				var rndColor = Math.Random.ColorRGBA(.4);
+				player = new Player();
+				player.SetPosition(rndX, rndY);
+				player.name = 'Player' + index;
+				player.color = rndColor;
 				player.rank = index + 1;
-				//player.score = Math.Random.RangeInt(0,100, true);
+				player.Renderer.Material.Source = Images['alien'];
 				this.gridGroup.AddGameObject(player);
 			}
-            
-            //this.gridGroup.AddGameObject(chest);
             
             this.Groups.push(this.gridGroup, this.collectiblesGroup);
 			this.started = true;
@@ -96,6 +109,7 @@ function GridLevel()
 	 * */
 	this.Update = function() 
 	{
+		
         if(Input.KeysDown[9])
         {
             location.reload();
@@ -129,7 +143,7 @@ function GridLevel()
 		// AFFICHAGE TIMER
 		ctx.font = '40px Verdana';
 		ctx.fillStyle = 'black';
-		ctx.fillText("TIMER : " + (this.Timer.duration - this.Timer.currentTime).toFixed(2), 100, canvas.height / 2);
+		// ctx.fillText("TIMER : " + (this.Timer.duration - this.Timer.currentTime).toFixed(2), 100, canvas.height / 2);
 
 		
 		if (!Application.GamePaused) 
@@ -143,11 +157,10 @@ function GridLevel()
 					this.PositionScore.push((element.rank - 1) * size + size / 2);
 				}
 			}
-			for (var index = 0; index < Application.nbPlayers; index++) {
+			for (var index = 0; index < Application.tempNbPlayers; index++) {
 				var element = this.gridGroup.GameObjects[index];
 				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
 				var scale = Math.min(size / element.Transform.Size.x, size/element.Transform.Size.y, 1);
-				console.log(scale)
 				ctx.drawImage(element.Renderer.Material.Source, posX + element.Transform.Size.x * scale / 2, this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
 				 					element.Transform.Size.x * scale, element.Transform.Size.y * scale
 				 );
