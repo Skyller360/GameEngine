@@ -47,7 +47,7 @@ function Player()
 	this.Transform = {};
 	this.Transform.RelativePosition = new Vector(0, 0);
 	this.Transform.Position = new Vector();
-	this.Transform.Size = new Vector(101, 171);
+	this.Transform.Size = new Vector(131, 188);
 	this.Transform.RelativeScale = new Vector();
     this.Transform.RelativeScale.x = Application.LoadedScene.grid.caseLength / this.Transform.Size.x;
     this.Transform.RelativeScale.y = Application.LoadedScene.grid.caseLength / this.Transform.Size.y;  
@@ -215,7 +215,7 @@ function Player()
 		That: this.Transform,
 		Material: 
 		{
-			Source: Images['Boy'],
+			Source: Images['alien'],
 			SizeFrame: new Vector(),
 			CurrentFrame: new Vector(),
 		},
@@ -420,7 +420,7 @@ function Player()
      var scalejump = 0;
 	this.Update = function() 
 	{
-        var index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * 2);
+        var index = IndexFromCoord((this.Transform.RelativePosition.x / Application.LoadedScene.grid.caseLength) | 0, (this.Transform.RelativePosition.y / Application.LoadedScene.grid.caseLength) | 0, Application.nbPlayers * NB_CASES_BY_PLAYER);
         Application.LoadedScene.grid.Cells[index].SetColor(this.color);
         
         if(!this.moving)
@@ -458,6 +458,8 @@ function Player()
                 this.moving = false;
                 scalejump = 0;
             }    
+			var data = { 'position' : this.Transform.Position};
+			socket.emit('updatePos', data);
         }
         
         if(this.Parent.collideWorldBound)
@@ -467,7 +469,12 @@ function Player()
         }
         
         this.CheckCollectibles(index);
-        
+		
+		// socket.on('updatePosServ', function(data)
+		// {
+			
+		// });
+		
         this.Renderer.Draw();
 		this.PostUpdate();	
 	};

@@ -26,6 +26,8 @@ function GridLevel()
 	this.WorldSize = new Vector(4096,4096);
 
 	this.PositionScore = [];
+
+	this.GameTimer = 500;
 	/**
 	 * Called at the instruction new Scene().
 	 * */
@@ -45,12 +47,13 @@ function GridLevel()
 		{
             Time.SetTimeWhenSceneBegin();
             //TIMER
-           	this.Timer = new Timer(TIME_GAME, false, null, function () {
-            	Application.LoadedScene = Scenes["EndGame"];
-            });
+
+           	// this.Timer = new Timer(TIME_GAME, false, null, function () {
+            // 	Application.GamePaused = true;
+            // });
+
 			
-			
-            this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * 2);
+            this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * NB_CASES_BY_PLAYER);
             var posGroup = new Vector(this.grid.x, this.grid.y);   
             this.gridGroup = new Group('gridGroup', posGroup);
 
@@ -75,16 +78,31 @@ function GridLevel()
 			this.gridGroup.AddGameObject(player);
 			player.rank = Application.nbPlayers;
 			
-			for (var index = 0; index < Application.nbPlayers - 1; index++) {
-	            player = new Player();
-				player.name = "Player " + index;
+			// for (var index = 0; index < Application.nbPlayers - 1; index++) {
+	        //     player = new Player();
+			// 	player.name = "Player " + index;
+			// 	player.rank = index + 1;
+			// 	//player.score = Math.Random.RangeInt(0,100, true);
+			// 	this.gridGroup.AddGameObject(player);
+			// }
+			
+			console.log(Application.tempNbPlayers);
+			
+			for (var index = 0; index < Application.tempNbPlayers; index++) {
+				var rndX =  Math.Random.RangeInt(0, this.grid.caseLength, true);
+				var rndY = Math.Random.RangeInt(0, this.grid.caseLength, true);
+				var rndColor = Math.Random.ColorRGBA(.4);
+				player = new Player();
+				player.SetPosition(rndX, rndY);
+				player.name = 'Player' + index;
+				player.color = rndColor;
 				player.rank = index + 1;
-				//player.score = Math.Random.RangeInt(0,100, true);
+				player.Renderer.Material.Source = Images['alien'];
 				this.gridGroup.AddGameObject(player);
 			}
             
-            //this.gridGroup.AddGameObject(chest);
             scoreGestion = new ScoreGestion(this.gridGroup);
+
             this.Groups.push(this.gridGroup, this.collectiblesGroup);
 			this.started = true;
 			Print('System:Scene ' + this.name + " Started !");
@@ -98,6 +116,7 @@ function GridLevel()
 	 * */
 	this.Update = function() 
 	{
+		
         if(Input.KeysDown[9])
         {
             location.reload();
@@ -129,17 +148,81 @@ function GridLevel()
 	this.GUI = function() 
 	{
 		// AFFICHAGE TIMER
-		ctx.font = '40px Verdana';
+		//ctx.fillStyle = 'black';
+		//ctx.fillRect( ((canvas.width - canvas.height) * 0.5) - 200 , 0 , 200 , 75 );
+		document.getElementById("canvas").style.cursor = "initial";
+		var fontSize = 40;
+		ctx.font = 'Bold '+fontSize+'px Verdana';
 		ctx.fillStyle = 'black';
-		ctx.textAlign = 'left';
-		ctx.fillText("TIMER : " + (this.Timer.duration - this.Timer.currentTime).toFixed(2), 100, canvas.height / 2);
 
-		
+		// ctx.textAlign = 'center';
+		// var theTimer = this.Timer.duration - this.Timer.currentTime;
+
+		// var timerPosX = ( (canvas.width - canvas.height) * 0.5 - 10);
+		// var timerPosX = (canvas.width  - Application.LoadedScene.grid.length) / 4;
+		// var timerPosY = fontSize/2;
+		// ctx.fillText((theTimer).toFixed(2), timerPosX, timerPosY);
+
+
 		if (!Application.GamePaused) 
 		{
 			//Show UI
-			scoreGestion.Show();
+
+			//scoreGestion.Show();
+
+			var size = sizeX = sizeY = Application.LoadedScene.grid.length / this.gridGroup.GameObjects.length;
+
+			var posX = Application.LoadedScene.grid.length / 2 + canvas.width /2;
+
+			if(this.PositionScore.length == 0){
+				for (var index = 0; index < this.gridGroup.GameObjects.length; index++) {
+					var element = this.gridGroup.GameObjects[index];
+					this.PositionScore.push((element.rank - 1) * size + size / 2);
+				}
+			}
+			for (var index = 0; index < Application.tempNbPlayers; index++) {
+				var element = this.gridGroup.GameObjects[index];
+				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
+				var scale = Math.min(size / element.Transform.Size.x, size/element.Transform.Size.y, 1);
+				ctx.drawImage(element.Renderer.Material.Source, posX + element.Transform.Size.x * scale / 2, this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
+				 					element.Transform.Size.x * scale, element.Transform.Size.y * scale);
+
+
+
+			// for (var index = 0; index < Application.nbPlayers; index++) 
+			// {
+			// 	var element = this.gridGroup.GameObjects[index];
+			// 	this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
+			// 	var scale = Math.min(size / element.Transform.Size.x, size / element.Transform.Size.y, 1);
+			// 	ctx.drawImage(	element.Renderer.Material.Source,
+			// 					posX + element.Transform.Size.x * scale / 2,
+			// 					this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
+			// 					element.Transform.Size.x * scale,
+			// 					element.Transform.Size.y * scale
+
+			// 	 );
+
+			// 	var sizeFont = 40;
+			// 	if(scale <= 0.4)
+			// 	{
+			// 		sizeFont *= 0.7;
+			// 	}
+			// 	ctx.font = sizeFont+'px Comic Sans MS';
+			// 	ctx.fillStyle = '#E0A33A';
+			// 	ctx.textAlign="center";
+			// 	ctx.textBaseline="middle"; 
+			// 	ctx.fillText(
+			// 		element.score,
+			// 		posX + element.Transform.Size.x * scale * 1.3,
+			// 		this.PositionScore[index]-10
+			// 	);
+			// 	ctx.lineWidth = 1;
+			// 	ctx.strokeStyle = "#F8C557";
+			// 	ctx.strokeText(element.score,posX + element.Transform.Size.x * scale * 1.3,
+			// 		this.PositionScore[index]-10);
+			// }
 		} 
+		}
 		else 
 		{
 			// Show pause menu

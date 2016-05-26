@@ -38,24 +38,10 @@ function Loader()
 		if (!this.started)
 		{
 			Time.SetTimeWhenGameBegin();
-			// operation start
-			// Scenes["SceneHub"] = new SceneHub();
-			// Scenes["SceneInput"] = new SceneInput();
-			// Scenes["SceneCamera"] = new SceneCamera();
-			// Scenes["SceneGroup"] = new SceneGroup();
-			// Scenes["SceneParticules"] = new SceneParticules();
-			// Scenes["SceneVector"]  = new SceneVector();
-			// Scenes["SceneTween"]  = new SceneTween();
-			// Scenes["ScenePostEffect"]  = new ScenePostEffect();
-			// Scenes["SceneAnim"]  = new SceneAnim();
-			// Scenes["SceneDialogue"]  = new SceneDialogue();
-			// Scenes["ScenePhysics_Debug"]  = new ScenePhysics_Debug();
-			// Scenes["ScenePathFinding"]  = new ScenePathFinding();
-			// Scenes["SceneSave"]  = new SceneSave();
-			// Scenes["SceneIA"]  = new SceneIA();		
-			// Scenes["AudioScene"]  = new AudioScene();			
+			// operation start			
 			Scenes["GridLevel"]  = new GridLevel();		
-			Scenes["EndGame"] = new EndGameScreen();	
+			Scenes["TitleScreen"]  = new TitleScreen();	
+			Scenes["EndGame"] = new EndGameScreen();		
 
 			LoadImages();
 			this.started = true;
