@@ -19,16 +19,15 @@ var Scenes = {};
 var Gravity = new Vector();
 Gravity.y = -9.81;
 
-// PATH FICHIER AUDIO
-
+var scoreGestion = null;
 var TIME_REPOP_CHEST = 1;
-var TIME_GAME = 30;
+var TIME_GAME = 2;
 var Application = 
 {
 	LoadedScene: null,
 	gamePaused: false,
-	debugMode: true,
-	nbPlayers: 11
+	debugMode: false,
+	nbPlayers: 4
 };
 
 var imagesLoaded = 0;

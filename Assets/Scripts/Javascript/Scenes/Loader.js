@@ -54,7 +54,8 @@ function Loader()
 			// Scenes["SceneSave"]  = new SceneSave();
 			// Scenes["SceneIA"]  = new SceneIA();		
 			// Scenes["AudioScene"]  = new AudioScene();			
-			Scenes["GridLevel"]  = new GridLevel();			
+			Scenes["GridLevel"]  = new GridLevel();		
+			Scenes["EndGame"] = new EndGameScreen();	
 
 			LoadImages();
 			this.started = true;
