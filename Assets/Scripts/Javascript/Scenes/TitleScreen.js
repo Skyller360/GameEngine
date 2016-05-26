@@ -22,6 +22,9 @@ function TitleScreen()
 	this.AlphaMask = null;
 	this.started = false;
 
+	this.connectedPlayers = Application.nbPlayers;
+	this.isMasterPlayer = true;
+
 	this.WorldSize = new Vector(4096,4096);
 
 	/**
@@ -80,6 +83,48 @@ function TitleScreen()
 		if (!Application.GamePaused) 
 		{
 			//Show UI
+
+			/* Game Title  */
+			ctx.font = '40px Verdana';
+			ctx.fillStyle = 'black';
+			ctx.textAlign="center";
+			ctx.textBaseline="middle";
+
+			var cW = canvas.width;
+			var cH = canvas.height;
+			ctx.fillText('Technobel Bash', cW/2, cH/4)
+
+			/* Connected players   */
+			ctx.font = '15px Verdana';
+			ctx.fillText('Connected player: '+ this.connectedPlayers, cW/2, cH/2 );
+
+
+
+			if(this.isMasterPlayer){
+				/* Play button */
+				var box = new Box();
+					box.x = (cW/2)-100;
+					box.y = cH/2+50;
+					box.w = 200;
+					box.h = 50;
+				ctx.font = '20px Verdana';
+				ctx.fillStyle = 'lightgreen';
+
+
+				if (Physics.CheckCollision(Input.MousePosition, box)) {
+					ctx.fillStyle = "#4CB064";
+					if (Input.mouseLongClick) {
+						Application.LoadedScene = Scenes['GridLevel'];
+					}
+				}
+
+				ctx.fillRect(box.x, box.y, box.w, box.h);
+				ctx.fillStyle = "black";
+				ctx.textAlign = 'center';
+				ctx.fillText('Play', box.x+100, box.y+25);
+			}else{
+				ctx.fillText('Wainting Players ...', cW/2, cH/2+150);
+			}
 		} 
 		else 
 		{

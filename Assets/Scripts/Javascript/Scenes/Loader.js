@@ -55,6 +55,7 @@ function Loader()
 			// Scenes["SceneIA"]  = new SceneIA();		
 			// Scenes["AudioScene"]  = new AudioScene();			
 			Scenes["GridLevel"]  = new GridLevel();			
+			Scenes["TitleScreen"]  = new TitleScreen();		
 
 			LoadImages();
 			this.started = true;

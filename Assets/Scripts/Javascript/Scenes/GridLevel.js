@@ -149,7 +149,6 @@ function GridLevel()
 				var element = this.gridGroup.GameObjects[index];
 				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
 				var scale = Math.min(size / element.Transform.Size.x, size/element.Transform.Size.y, 1);
-				console.log(scale)
 				ctx.drawImage(element.Renderer.Material.Source, posX + element.Transform.Size.x * scale / 2, this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
 				 					element.Transform.Size.x * scale, element.Transform.Size.y * scale
 				 );
@@ -165,10 +164,7 @@ function GridLevel()
 				ctx.textAlign="center";
 				ctx.textBaseline="middle"; 
 				ctx.fillText(element.score, posX + element.Transform.Size.x * scale * 1.5 + 50, this.PositionScore[index]);
-				
-				
 			}
-
 		} 
 		else 
 		{
