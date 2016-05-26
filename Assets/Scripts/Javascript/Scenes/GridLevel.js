@@ -21,6 +21,7 @@ function GridLevel()
 	this.CurrentCamera = null;
 	this.AlphaMask = null;
 	this.started = false;
+	this.Timer = null;
 
 	this.WorldSize = new Vector(4096,4096);
 
@@ -45,7 +46,10 @@ function GridLevel()
 		if (!this.started) 
 		{
             Time.SetTimeWhenSceneBegin();
-
+            //TIMER
+           	this.Timer = new Timer(TIME_GAME, false, null, function () {
+            	Application.GamePaused = true;
+            });
 			
 			
             this.grid = new Grid((canvas.width - canvas.height) * 0.5, 0, canvas.height, Application.nbPlayers * 2);
@@ -124,24 +128,45 @@ function GridLevel()
 	 * */
 	this.GUI = function() 
 	{
+		// AFFICHAGE TIMER
+		ctx.font = '40px Verdana';
+		ctx.fillStyle = 'black';
+		ctx.fillText("TIMER : " + (this.Timer.duration - this.Timer.currentTime).toFixed(2), 100, canvas.height / 2);
+
+		
 		if (!Application.GamePaused) 
 		{
 			//Show UI
-			var posX = Application.LoadedScene.grid.length / 2 + canvas.width /2 + 50;
-			var sizeY = Application.LoadedScene.grid.length / this.gridGroup.GameObjects.length;
+			var size = sizeX = sizeY = Application.LoadedScene.grid.length / this.gridGroup.GameObjects.length;
+			var posX = Application.LoadedScene.grid.length / 2 + canvas.width /2;
 			if(this.PositionScore.length == 0){
 				for (var index = 0; index < this.gridGroup.GameObjects.length; index++) {
 					var element = this.gridGroup.GameObjects[index];
-					this.PositionScore.push((element.rank - 1) * sizeY + sizeY / 2);
+					this.PositionScore.push((element.rank - 1) * size + size / 2);
 				}
 			}
 			for (var index = 0; index < Application.nbPlayers; index++) {
 				var element = this.gridGroup.GameObjects[index];
-				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * sizeY + sizeY / 2, Time.deltaTime * 500, 2 );
-				//posY = (element.rank - 1)* sizeY + sizeY / 2;
-				ctx.font = '20px Verdana';
+				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
+				var scale = Math.min(size / element.Transform.Size.x, size/element.Transform.Size.y, 1);
+				console.log(scale)
+				ctx.drawImage(element.Renderer.Material.Source, posX + element.Transform.Size.x * scale / 2, this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
+				 					element.Transform.Size.x * scale, element.Transform.Size.y * scale
+				 );
+				
+				
+				var sizeFont = 20;
+				if(scale <= 0.4)
+				{
+					sizeFont *= 0.7;
+				}
+				ctx.font = sizeFont+'px Verdana';
 				ctx.fillStyle = 'black';
-				ctx.fillText('Score de '+element.name+' : '+element.score, posX, this.PositionScore[index]);
+				ctx.textAlign="center";
+				ctx.textBaseline="middle"; 
+				ctx.fillText(element.score, posX + element.Transform.Size.x * scale * 1.5 + 50, this.PositionScore[index]);
+				
+				
 			}
 
 		} 
