@@ -90,12 +90,18 @@ function getGame(req, res)
 }
 
 io.on('connection', function (socket) {
-	nbConnected++;
-    socket.emit('newPlayer', nbConnected);    
+	
+    socket.broadcast.emit('newPlayer', nbConnected);
+    socket.on('increment', function(data)
+    {
+        console.log(data);
+        nbConnected = data;
+    })
     
     socket.on('updatePos', function(data)
     {
        console.log(data);
        socket.emit('updatePosServ', data);
     });
+    
 });

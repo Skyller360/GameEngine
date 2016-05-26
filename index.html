@@ -63,13 +63,13 @@
 	<script>		
 		socket.on('newPlayer', function(data)
 		{
+			data++;
+			socket.emit('increment', data);
 			console.log(data);
 			if(data == 1)
 			{
 				Application.Host = true;				
 			}
-			Application.tempNbPlayers = data;
-			// Application.nbPlayers = data;
 		})
 	</script>
 

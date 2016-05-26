@@ -83,6 +83,13 @@ function TitleScreen()
 		document.getElementById("canvas").style.cursor = "initial";
 		if (!Application.GamePaused) 
 		{
+			socket.on('newPlayer', function(data)
+			{
+				Application.tempNbPlayers = data;
+				console.log('ici');
+			})
+
+			console.log(Application.tempNbPlayers)
 			//Show UI
 			var txtTitle = "Techno Bash";
 			var txtConnected = "Connected x ";
@@ -99,7 +106,7 @@ function TitleScreen()
 
 			/* Connected players   */
 			ctx.font = '15px Verdana';
-			ctx.fillText(txtConnected + this.connectedPlayers, cW/2 , cH/2 );
+			ctx.fillText(txtConnected + Application.tempNbPlayers, cW/2 , cH/2 );
 
 
 			if(this.host){
