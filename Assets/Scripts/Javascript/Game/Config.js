@@ -28,7 +28,7 @@ var Application =
 	LoadedScene: null,
 	gamePaused: false,
 	debugMode: true,
-	nbPlayers: 4
+	nbPlayers: 11
 };
 
 var imagesLoaded = 0;
