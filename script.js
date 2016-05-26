@@ -4,6 +4,7 @@ var app = express();
 var server = require('http').Server(app)
 var serverUrl = app.get(port);//"127.0.0.1";
 var nbConnected = 0;
+var ids = [];
 
 var http = require("http");
 var path = require("path"); 
@@ -57,7 +58,7 @@ function getGame(req, res)
 		".jpg": "image/jpeg",
 		".gif": "image/gif",
 		".png": "image/png",
-		".ico": "icon",
+		// ".ico": "icon",
 		".mp3": "audio/mpeg"
 	};
 	
@@ -91,17 +92,34 @@ function getGame(req, res)
 
 io.on('connection', function (socket) {
 	
-    socket.broadcast.emit('newPlayer', nbConnected);
-    socket.on('increment', function(data)
+    // socket.on('increment', function(data)
+    // {
+    //     console.log(data);
+    //     nbConnected = data;
+    // })
+    
+    
+    
+    
+    do
     {
-        console.log(data);
-        nbConnected = data;
+        var rnd =  Math.floor(Math.random() * (500 - 1)) + 1;
+    }while(ids.indexOf(rnd) != - 1) 
+    
+    socket.emit('newPlayer', rnd);
+    
+    // socket.on('updatePos', function(data)
+    // {
+    //    console.log(data);
+    //    socket.emit('updatePosServ', data);
+    // });
+    socket.on('increment', function (data) {
+        nbConnected++;
+        console.log(nbConnected);
+        ids.push(data);
+        socket.emit('countPlayer', nbConnected);
     })
     
-    socket.on('updatePos', function(data)
-    {
-       console.log(data);
-       socket.emit('updatePosServ', data);
-    });
+    
     
 });

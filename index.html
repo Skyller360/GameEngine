@@ -64,16 +64,33 @@
 	<script type="text/javascript" src="Assets/Scripts/Javascript/Game/Game.js"></script>
 	<script type="text/javascript" src="Assets/Scripts/Javascript/Game/Init.js"></script>
 	<script>		
-		socket.on('newPlayer', function(data)
+		var id = 0;
+		
+		if(id == 0)
 		{
-			data++;
-			socket.emit('increment', data);
-			console.log(data);
-			if(data == 1)
-			{
-				Application.Host = true;				
-			}
+			socket.on('newPlayer', function(data)
+			{	
+				id = data;
+				
+				socket.emit('increment', data);	
+			});	
+		}
+		
+		
+		socket.on('countPlayer', function(data){
+			Application.tempNbPlayers = data;
 		})
+		
+		// socket.on('newPlayer', function(data)
+		// {
+		// 	data++;
+		// 	socket.emit('increment', data);
+		// 	console.log(data);
+		// 	if(data == 1)
+		// 	{
+		// 		Application.Host = true;				
+		// 	}
+		// })
 	</script>
 
 </body>
