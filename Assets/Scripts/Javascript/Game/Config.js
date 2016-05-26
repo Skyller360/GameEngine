@@ -22,7 +22,7 @@ Gravity.y = -9.81;
 // PATH FICHIER AUDIO
 var NB_CASES_BY_PLAYER = 8;
 var TIME_REPOP_CHEST = 1;
-var TIME_GAME = 30;
+var TIME_GAME = 250;
 var Application = 
 {
 	LoadedScene: null,
