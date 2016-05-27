@@ -88,18 +88,18 @@ function GridLevel()
 			
 			console.log(Application.tempNbPlayers);
 			
-			for (var index = 0; index < Application.tempNbPlayers; index++) {
-				var rndX =  Math.Random.RangeInt(0, this.grid.caseLength, true);
-				var rndY = Math.Random.RangeInt(0, this.grid.caseLength, true);
-				var rndColor = Math.Random.ColorRGBA(.4);
-				player = new Player();
-				player.SetPosition(rndX, rndY);
-				player.name = 'Player' + index;
-				player.color = rndColor;
-				player.rank = index + 1;
-				player.Renderer.Material.Source = Images['alien'];
-				this.gridGroup.AddGameObject(player);
-			}
+			// for (var index = 0; index < Application.tempNbPlayers; index++) {
+			// 	var rndX =  Math.Random.RangeInt(0, this.grid.caseLength, true);
+			// 	var rndY = Math.Random.RangeInt(0, this.grid.caseLength, true);
+			// 	var rndColor = Math.Random.ColorRGBA(.4);
+			// 	player = new Player();
+			// 	player.SetPosition(rndX, rndY);
+			// 	player.name = 'Player' + index;
+			// 	player.color = rndColor;
+			// 	player.rank = index + 1;
+			// 	player.Renderer.Material.Source = Images['alien'];
+			// 	this.gridGroup.AddGameObject(player);
+			// }
             
             scoreGestion = new ScoreGestion(this.gridGroup);
 
@@ -180,15 +180,16 @@ function GridLevel()
 					this.PositionScore.push((element.rank - 1) * size + size / 2);
 				}
 			}
-			for (var index = 0; index < Application.tempNbPlayers; index++) {
-				var element = this.gridGroup.GameObjects[index];
-				this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
-				var scale = Math.min(size / element.Transform.Size.x, size/element.Transform.Size.y, 1);
-				ctx.drawImage(element.Renderer.Material.Source, posX + element.Transform.Size.x * scale / 2, this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
-				 					element.Transform.Size.x * scale, element.Transform.Size.y * scale);
+			
+			// for (var index = 0; index < Application.tempNbPlayers; index++) {
+			// 	var element = this.gridGroup.GameObjects[index];
+			// 	this.PositionScore[index] = Tween.newLinear(this.PositionScore[index], (element.rank - 1) * size + size / 2, Time.deltaTime * 500, 5 );
+			// 	var scale = Math.min(size / element.Transform.Size.x, size/element.Transform.Size.y, 1);
+			// 	ctx.drawImage(element.Renderer.Material.Source, posX + element.Transform.Size.x * scale / 2, this.PositionScore[index] - element.Transform.Size.y * scale / 2, 
+			// 	 					element.Transform.Size.x * scale, element.Transform.Size.y * scale);
 
-
-
+									 
+			// }
 			// for (var index = 0; index < Application.nbPlayers; index++) 
 			// {
 			// 	var element = this.gridGroup.GameObjects[index];
@@ -221,7 +222,7 @@ function GridLevel()
 			// 	ctx.strokeText(element.score,posX + element.Transform.Size.x * scale * 1.3,
 			// 		this.PositionScore[index]-10);
 			// }
-		} 
+		 
 		}
 		else 
 		{

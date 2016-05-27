@@ -37,6 +37,7 @@ function Player()
     this.score = 0;
     this.rank = Application.LoadedScene.gridGroup.GameObjects.length;
     this.previousRank = this.rank;
+	this.me = false;
     
     this.moving = false;
     
@@ -448,18 +449,31 @@ function Player()
         }
         else
         {
+			console.log(Application.id);
             scalejump += 0.2;
+			
+			socket.on('updatePosServ', function(data)
+			{
+				console.log(socket.id);
+				_self.Transform.RelativePosition = data.position;
+				_self.Transform.Scale = data.scale;
+			});
+			
             this.Transform.RelativePosition.y = Tween.newLinear(this.Transform.RelativePosition.y, this.goal.y, Time.deltaTime * this.speed, 4);
             this.Transform.RelativePosition.x = Tween.newLinear(this.Transform.RelativePosition.x, this.goal.x, Time.deltaTime * this.speed, 4);
-            this.Transform.Scale.x *= (1 + Math.sin(scalejump) * 0.5);
+			this.Transform.Scale.x *= (1 + Math.sin(scalejump) * 0.5);
             this.Transform.Scale.y *= (1 + Math.sin(scalejump) * 0.5);  
+			
             if((this.Transform.RelativePosition.x | 0) == (this.goal.x | 0) && (this.Transform.RelativePosition.y | 0) == (this.goal.y | 0))
             {
                 this.moving = false;
                 scalejump = 0;
             }    
-			var data = { 'position' : this.Transform.Position};
+			
+			var data = { 'position' : this.Transform.RelativePosition, 'scale' : this.Transform.Scale, 'id' : socket.id};
 			socket.emit('updatePos', data);
+			
+			
         }
         
         if(this.Parent.collideWorldBound)
@@ -470,10 +484,9 @@ function Player()
         
         this.CheckCollectibles(index);
 		
-		// socket.on('updatePosServ', function(data)
-		// {
-			
-		// });
+		var _self = this;
+		
+		
 		
         this.Renderer.Draw();
 		this.PostUpdate();	

@@ -83,13 +83,6 @@ function TitleScreen()
 		document.getElementById("canvas").style.cursor = "initial";
 		if (!Application.GamePaused) 
 		{
-			socket.on('newPlayer', function(data)
-			{
-				Application.tempNbPlayers = data;
-				console.log('ici');
-			})
-
-			console.log(Application.tempNbPlayers)
 			//Show UI
 			var txtTitle = "Techno Bash";
 			var txtConnected = "Connected x ";
@@ -109,7 +102,7 @@ function TitleScreen()
 			ctx.fillText(txtConnected + Application.tempNbPlayers, cW/2 , cH/2 );
 
 
-			if(this.host){
+			if(Application.host){
 				/* Play button for host */
 				var box = new Box();
 					box.x = (cW/2)-100;
@@ -118,12 +111,12 @@ function TitleScreen()
 					box.h = 50;
 					ctx.font = '20px Verdana';
 					ctx.fillStyle = 'lightgreen';
-
 				if (Physics.CheckCollision(Input.MousePosition, box)) {
 					ctx.fillStyle = "#4CB064";
 					document.getElementById("canvas").style.cursor = "pointer";
 					if (Input.mouseLongClick) {
 						Application.LoadedScene = Scenes['GridLevel'];
+						socket.emit('gameStarted', 'GridLevel');
 					}
 				}
 				ctx.fillRect(box.x, box.y, box.w, box.h);
@@ -131,9 +124,16 @@ function TitleScreen()
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
 				ctx.fillText(txtPLay , box.x+100, box.y+25);
-			}else{
+			}else
+			{
 				/* Waiting message for other */
 				ctx.fillText(txtWainting , cW/2+10, cH/2+50);
+				
+				socket.on('startGame', function(data)
+				{
+					Application.LoadedScene = Scenes[data];
+				});
+				
 			}
 		} 
 		else 

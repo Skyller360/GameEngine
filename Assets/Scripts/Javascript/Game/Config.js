@@ -30,9 +30,25 @@ var Application =
 	gamePaused: false,
 	debugMode: true,
 	nbPlayers: 1,
-	Host: false,
-	tempNbPlayers : 0
+	host: false,
+	tempNbPlayers : 1,
+	id : null
 };
+
+socket.on('countPlayer', function(data)
+{
+	Application.tempNbPlayers = data.nbConnected;
+	console.log(data.id);
+	if(Application.tempNbPlayers == 1)
+	{
+		Application.host = true;
+	}
+	if(Application.id == null)
+	{
+		Application.id = data.id;
+	}
+	
+})
 
 var imagesLoaded = 0;
 var WalkableTiles = [];
