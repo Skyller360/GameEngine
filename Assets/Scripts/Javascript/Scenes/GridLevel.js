@@ -74,7 +74,7 @@ function GridLevel()
 			// operation start
             var player = new Player();
 			player.name = "moi";
-            player.SetPosition(this.grid.caseLength / 2, this.grid.caseLength / 2);
+            player.SetPosition(Application.firstPosition.x, Application.firstPosition.y);
 			this.gridGroup.AddGameObject(player);
 			player.rank = Application.nbPlayers;
 			
@@ -88,18 +88,18 @@ function GridLevel()
 			
 			console.log(Application.tempNbPlayers);
 			
-			// for (var index = 0; index < Application.tempNbPlayers; index++) {
-			// 	var rndX =  Math.Random.RangeInt(0, this.grid.caseLength, true);
-			// 	var rndY = Math.Random.RangeInt(0, this.grid.caseLength, true);
-			// 	var rndColor = Math.Random.ColorRGBA(.4);
-			// 	player = new Player();
-			// 	player.SetPosition(rndX, rndY);
-			// 	player.name = 'Player' + index;
-			// 	player.color = rndColor;
-			// 	player.rank = index + 1;
-			// 	player.Renderer.Material.Source = Images['alien'];
-			// 	this.gridGroup.AddGameObject(player);
-			// }
+			for (var index = 0; index < Application.tempNbPlayers - 1; index++) {
+				var thisId = Application.otherIds[index];
+				var rndColor = Math.Random.ColorRGBA(.4);
+				player = new Player();
+				player.name = 'Player' + index;
+				player.color = rndColor;
+				console.log(Application.otherPosition[thisId]);
+				player.SetPosition(Application.otherPosition[thisId].x, Application.otherPosition[thisId].y)
+				player.rank = index + 1;
+				player.Renderer.Material.Source = Images['alien'];
+				this.gridGroup.AddGameObject(player);
+			}
             
             scoreGestion = new ScoreGestion(this.gridGroup);
 

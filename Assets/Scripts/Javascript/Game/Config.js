@@ -32,7 +32,10 @@ var Application =
 	nbPlayers: 1,
 	host: false,
 	tempNbPlayers : 1,
-	id : null
+	id : null,
+	firstPosition : null,
+	otherPosition : {},
+	otherIds : []
 };
 
 socket.on('countPlayer', function(data)
@@ -74,4 +77,5 @@ var AudioPath =
 	{ name:'Bend', path: 'TechnoGame_Bend.mp3'}
 	
 ];
+
 var Audios = {};

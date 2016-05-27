@@ -30,6 +30,23 @@ window.addEventListener("mouseup", Input.MouseUp);
 window.addEventListener("mousedown", Input.MouseDown);
 window.addEventListener("mousemove", Input.MouseMove);
 
+socket.on('firstPosition', function(data)
+{
+
+	if(data.id == Application.id && Application.firstPosition == null)
+	{
+		Application.firstPosition = data.firstPosition;
+	}
+	else
+	{
+		console.log('icicic');
+		var id = data.id;
+		Application.otherPosition[id] = data.firstPosition;	
+		Application.otherIds.push(id);
+	}
+	console.log(Application.otherPosition);
+});
+
 
 /********************
 		Start

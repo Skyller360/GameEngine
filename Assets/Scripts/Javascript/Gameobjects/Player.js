@@ -354,6 +354,7 @@ function Player()
 		if (!this.started) {
 			// operation start
             this.goal = new Vector(this.Transform.RelativePosition.x, this.Transform.RelativePosition.y);
+			this.Transform.RelativePosition = Application.firstPosition;
             
 			if (this.Physics.colliderIsSameSizeAsTransform) 
 			{

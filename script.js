@@ -102,12 +102,19 @@ io.on('connection', function (socket) {
     });
 	
     socket.on('increment', function (data) {
+		
 		nbConnected++;
+		var rndX = (Math.random() * 500) + 1 | 0;
+		var rndY = (Math.random() * 500) + 1 | 0;
+		var firstPosition = {'x' : rndX, 'y': rndY}; 
+		console.log(firstPosition);
 		if(players.indexOf(data) == -1)
 		{
 			players.push(data);
 		}
-		io.emit('countPlayer', { 'nbConnected' : nbConnected, 'id' : players[nbConnected - 1] });
+		
+		io.emit('countPlayer', { 'nbConnected' : nbConnected, 'id' : players[nbConnected - 1]});
+		io.emit('firstPosition', {'firstPosition' : firstPosition, 'id' : players[nbConnected - 1] });
 		console.log(players);
     })
 	
